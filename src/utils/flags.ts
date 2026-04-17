@@ -23,7 +23,7 @@ const NATIONALITY_FLAGS: Record<string, string> = {
   Austrian: '🇦🇹',
   Swiss: '🇨🇭',
   Russian: '🇷🇺',
-  New Zealander: '🇳🇿',
+  'New Zealander': '🇳🇿',
   Colombian: '🇨🇴',
   Venezuelan: '🇻🇪',
   Indonesian: '🇮🇩',

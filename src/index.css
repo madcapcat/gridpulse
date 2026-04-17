@@ -1,14 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --color-bg: #0a0a0a;
-  --color-surface: #141414;
-  --color-border: #242424;
-  --color-accent: #e10600;
+@theme {
+  /* Paleta OLED dark — base del sistema */
+  --color-gp-bg:         #000000;
+  --color-gp-surface:    #111111;
+  --color-gp-surface-2:  #1a1a1a;
+  --color-gp-border:     #222222;
+  --color-gp-border-2:   #333333;
+
+  /* Texto */
+  --color-gp-text:       #ffffff;
+  --color-gp-muted:      #a1a1aa;
+  --color-gp-subtle:     #52525b;
+
+  /* Acento F1 */
+  --color-gp-red:        #e10600;
+  --color-gp-red-hover:  #ff0a05;
+
+  /* Tipografia */
+  --font-heading: 'Fira Code', monospace;
+  --font-body:    'Fira Sans', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
-  background-color: var(--color-bg);
-  color: #ffffff;
-  font-family: system-ui, sans-serif;
+  background-color: var(--color-gp-bg);
+  color: var(--color-gp-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--color-gp-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-gp-border-2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gp-muted); }
+
+/* Focus ring accesible */
+:focus-visible {
+  outline: 2px solid var(--color-gp-red);
+  outline-offset: 2px;
 }
