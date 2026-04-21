@@ -1,7 +1,8 @@
 import type { RaceResult } from '@/types/f1.types'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { getTeamColor } from '@/constants/teams'
+import { TeamLogo } from '@/components/ui/team-logo'
+import { getTeamColor, getTeamLogo } from '@/constants/teams'
 import { getNationalityFlag } from '@/utils/flags'
 import { formatGap } from '@/utils/format'
 
@@ -35,7 +36,9 @@ export function RaceResultsTable({ result }: RaceResultsTableProps) {
           </thead>
           <tbody>
             {result.Results.map((r) => {
-              const teamColor = getTeamColor(r.Constructor.constructorId)
+              const { constructorId } = r.Constructor
+              const teamColor = getTeamColor(constructorId)
+              const hasLogo = !!getTeamLogo(constructorId)
               const flag = getNationalityFlag(r.Driver.nationality)
               const isWinner = r.position === '1'
               const dnf = !r.Time && r.status !== 'Finished' && !r.status.includes('+')
@@ -64,16 +67,23 @@ export function RaceResultsTable({ result }: RaceResultsTableProps) {
                           {r.Driver.givenName}{' '}
                           <span className="font-heading font-bold">{r.Driver.familyName}</span>
                         </span>
-                        <div className="sm:hidden mt-0.5">
-                          <Badge variant="team" color={teamColor}>{r.Constructor.name}</Badge>
+                        {/* Mobile: logo o badge debajo del nombre */}
+                        <div className="sm:hidden mt-1">
+                          {hasLogo
+                            ? <TeamLogo constructorId={constructorId} />
+                            : <Badge variant="team" color={teamColor}>{r.Constructor.name}</Badge>
+                          }
                         </div>
                       </div>
                     </div>
                   </td>
 
-                  {/* Equipo */}
+                  {/* Equipo — logo si existe, badge de texto si no */}
                   <td className="py-3 px-3 hidden sm:table-cell">
-                    <Badge variant="team" color={teamColor}>{r.Constructor.name}</Badge>
+                    {hasLogo
+                      ? <TeamLogo constructorId={constructorId} />
+                      : <Badge variant="team" color={teamColor}>{r.Constructor.name}</Badge>
+                    }
                   </td>
 
                   {/* Vueltas */}

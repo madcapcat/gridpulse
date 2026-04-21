@@ -1,3 +1,21 @@
+// Logos de equipos — archivos en public/logos/teams/
+export const TEAM_LOGOS: Record<string, string> = {
+  'red_bull':     '/logos/teams/red-bull.svg',
+  'ferrari':      '/logos/teams/ferrari.svg',
+  'mercedes':     '/logos/teams/mercedes.svg',
+  'mclaren':      '/logos/teams/mclaren.svg',
+  'aston_martin': '/logos/teams/aston-martin.png',
+  'alpine':       '/logos/teams/alpine.svg',
+  'williams':     '/logos/teams/williams.svg',
+  'haas':         '/logos/teams/haas.svg',
+  'sauber':       '/logos/teams/sauber.svg',
+  'rb':           '/logos/teams/rb.svg',
+}
+
+export function getTeamLogo(constructorId: string): string | null {
+  return TEAM_LOGOS[constructorId.toLowerCase()] ?? null
+}
+
 // Colores oficiales de equipos F1 2025
 export const TEAM_COLORS: Record<string, string> = {
   'red_bull': '#3671C6',

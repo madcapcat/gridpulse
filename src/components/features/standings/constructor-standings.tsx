@@ -1,6 +1,7 @@
 import type { ConstructorStanding } from '@/types/f1.types'
 import { Card } from '@/components/ui/card'
-import { getTeamColor } from '@/constants/teams'
+import { TeamLogo } from '@/components/ui/team-logo'
+import { getTeamColor, getTeamLogo } from '@/constants/teams'
 import { getNationalityFlag } from '@/utils/flags'
 
 type ConstructorStandingsProps = {
@@ -21,13 +22,15 @@ export function ConstructorStandingsTable({ standings }: ConstructorStandingsPro
         </thead>
         <tbody>
           {standings.map((entry, i) => {
-            const color = getTeamColor(entry.Constructor.constructorId)
+            const { constructorId } = entry.Constructor
+            const color = getTeamColor(constructorId)
+            const hasLogo = !!getTeamLogo(constructorId)
             const flag = getNationalityFlag(entry.Constructor.nationality)
             const isTop3 = i < 3
 
             return (
               <tr
-                key={entry.Constructor.constructorId}
+                key={constructorId}
                 className="border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors duration-150"
               >
                 {/* Posicion */}
@@ -40,14 +43,21 @@ export function ConstructorStandingsTable({ standings }: ConstructorStandingsPro
                 {/* Constructor */}
                 <td className="py-3 px-3">
                   <div className="flex items-center gap-3">
-                    {/* Barra de color del equipo */}
+                    {/* Barra de color — siempre visible para identificar el equipo */}
                     <div className="w-1 h-8 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm leading-none">{flag}</span>
-                        <span className="font-medium text-white">{entry.Constructor.name}</span>
-                      </div>
-                      <span className="text-xs text-[#52525b] mt-0.5 block">{entry.Constructor.nationality}</span>
+                    <div className="flex items-center gap-3">
+                      {hasLogo
+                        ? <TeamLogo constructorId={constructorId} />
+                        : (
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm leading-none">{flag}</span>
+                              <span className="font-medium text-white">{entry.Constructor.name}</span>
+                            </div>
+                            <span className="text-xs text-[#52525b] mt-0.5 block">{entry.Constructor.nationality}</span>
+                          </div>
+                        )
+                      }
                     </div>
                   </div>
                 </td>
