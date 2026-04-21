@@ -1,6 +1,7 @@
 import type { RaceResult } from '@/types/f1.types'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { CircuitSilhouette } from '@/components/ui/circuit-silhouette'
 import { getTeamColor } from '@/constants/teams'
 import { getNationalityFlag } from '@/utils/flags'
 import { formatGap } from '@/utils/format'
@@ -13,11 +14,17 @@ export function RaceResultsTable({ result }: RaceResultsTableProps) {
   return (
     <div>
       {/* Header de carrera */}
-      <div className="mb-4">
-        <h2 className="font-heading text-xl font-bold text-white">{result.raceName}</h2>
-        <p className="text-sm text-[#a1a1aa]">
-          {result.Circuit.circuitName} — Round {result.round}, {result.season}
-        </p>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <h2 className="font-heading text-xl font-bold text-white">{result.raceName}</h2>
+          <p className="text-sm text-[#a1a1aa]">
+            {result.Circuit.circuitName} — Round {result.round}, {result.season}
+          </p>
+        </div>
+        <CircuitSilhouette
+          circuitId={result.Circuit.circuitId}
+          className="hidden sm:block h-16 w-auto opacity-25 shrink-0"
+        />
       </div>
 
       <Card padding="sm">

@@ -2,6 +2,7 @@ import { MapPin, Clock } from 'lucide-react'
 import type { Race } from '@/types/f1.types'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { CircuitSilhouette } from '@/components/ui/circuit-silhouette'
 import { formatShortDate, isRacePast, isNextRace } from '@/utils/date'
 import { getCountryFlag } from '@/utils/flags'
 
@@ -56,6 +57,12 @@ export function RaceCalendar({ races }: RaceCalendarProps) {
                   </span>
                 </div>
               </div>
+
+              {/* Silueta del circuito */}
+              <CircuitSilhouette
+                circuitId={race.Circuit.circuitId}
+                className="hidden sm:block h-14 w-auto opacity-25 shrink-0"
+              />
             </div>
           </Card>
         )
