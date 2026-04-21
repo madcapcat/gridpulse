@@ -6,6 +6,7 @@ import type {
   OpenF1PitStop,
   OpenF1Lap,
   OpenF1Weather,
+  OpenF1Stint,
 } from '@/types/openf1.types'
 
 const BASE_URL = 'https://api.openf1.org/v1'
@@ -51,4 +52,8 @@ export async function fetchLaps(sessionKey: number | 'latest' = 'latest', driver
 
 export async function fetchWeather(sessionKey: number | 'latest' = 'latest'): Promise<OpenF1Weather[]> {
   return fetchJSON<OpenF1Weather[]>(`${BASE_URL}/weather?session_key=${sessionKey}`)
+}
+
+export async function fetchStints(sessionKey: number | 'latest' = 'latest'): Promise<OpenF1Stint[]> {
+  return fetchJSON<OpenF1Stint[]>(`${BASE_URL}/stints?session_key=${sessionKey}`)
 }

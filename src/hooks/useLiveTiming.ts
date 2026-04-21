@@ -6,8 +6,9 @@ import {
   fetchIntervals,
   fetchPitStops,
   fetchWeather,
+  fetchStints,
 } from '@/services/openf1'
-import type { OpenF1Driver, OpenF1Position, OpenF1Interval, OpenF1PitStop } from '@/types/openf1.types'
+import type { OpenF1Driver, OpenF1Position, OpenF1Interval, OpenF1PitStop, OpenF1Stint, TyreCompound } from '@/types/openf1.types'
 
 export type LiveTimingRow = {
   driverNumber: number
@@ -20,6 +21,7 @@ export type LiveTimingRow = {
   interval: number | null
   pitCount: number
   lastPitDuration: number | null
+  compound: TyreCompound | null
 }
 
 // Devuelve el registro más reciente por piloto de un array con campo date
@@ -37,6 +39,7 @@ function buildTimingRows(
   positions: OpenF1Position[],
   intervals: OpenF1Interval[],
   pits: OpenF1PitStop[],
+  stints: OpenF1Stint[],
 ): LiveTimingRow[] {
   const latestPositions = getLatestPerDriver(positions)
   const latestIntervals = getLatestPerDriver(intervals)
@@ -46,6 +49,22 @@ function buildTimingRows(
     const arr = pitsByDriver.get(pit.driver_number) ?? []
     arr.push(pit)
     pitsByDriver.set(pit.driver_number, arr)
+  }
+
+  // Compuesto actual = stint con stint_number más alto por piloto
+  const currentCompound = new Map<number, TyreCompound>()
+  for (const stint of stints) {
+    const prev = currentCompound.get(stint.driver_number)
+    if (!prev) {
+      currentCompound.set(stint.driver_number, stint.compound)
+    } else {
+      const prevStintNum = stints.find(
+        (s) => s.driver_number === stint.driver_number && s.compound === prev
+      )?.stint_number ?? 0
+      if (stint.stint_number > prevStintNum) {
+        currentCompound.set(stint.driver_number, stint.compound)
+      }
+    }
   }
 
   return drivers
@@ -68,6 +87,7 @@ function buildTimingRows(
         interval: interval?.interval ?? null,
         pitCount: driverPits.length,
         lastPitDuration: lastPit?.pit_duration ?? null,
+        compound: currentCompound.get(driver.driver_number) ?? null,
       }
     })
     .sort((a, b) => a.position - b.position)
@@ -118,6 +138,14 @@ export function useLiveTiming() {
     staleTime: 0,
   })
 
+  const stintsQuery = useQuery({
+    queryKey: ['live-stints', sessionKey],
+    queryFn: () => fetchStints(sessionKey!),
+    enabled: isLive,
+    refetchInterval: 15_000,
+    staleTime: 0,
+  })
+
   const weatherQuery = useQuery({
     queryKey: ['live-weather', sessionKey],
     queryFn: () => fetchWeather(sessionKey!),
@@ -132,7 +160,7 @@ export function useLiveTiming() {
 
   const timingRows =
     driversQuery.data && positionsQuery.data && intervalsQuery.data && pitsQuery.data
-      ? buildTimingRows(driversQuery.data, positionsQuery.data, intervalsQuery.data, pitsQuery.data)
+      ? buildTimingRows(driversQuery.data, positionsQuery.data, intervalsQuery.data, pitsQuery.data, stintsQuery.data ?? [])
       : []
 
   return {

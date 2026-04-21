@@ -1,4 +1,5 @@
 import type { LiveTimingRow } from '@/hooks/useLiveTiming'
+import { TyreCompoundBadge } from '@/components/ui/tyre-compound'
 
 type LiveTimingTableProps = {
   rows: LiveTimingRow[]
@@ -29,6 +30,7 @@ export function LiveTimingTable({ rows }: LiveTimingTableProps) {
             <th className="text-left py-2 px-3 hidden sm:table-cell">TEAM</th>
             <th className="text-right py-2 px-3">GAP</th>
             <th className="text-right py-2 px-3 hidden md:table-cell">INT</th>
+            <th className="text-left py-2 px-3 hidden sm:table-cell">TYRE</th>
             <th className="text-right py-2 px-3 w-10">PITS</th>
           </tr>
         </thead>
@@ -73,6 +75,13 @@ export function LiveTimingTable({ rows }: LiveTimingTableProps) {
 
               <td className="py-3 px-3 text-right font-heading text-sm hidden md:table-cell text-[#a1a1aa]">
                 {row.position === 1 ? '—' : formatGap(row.interval)}
+              </td>
+
+              <td className="py-3 px-3 hidden sm:table-cell">
+                {row.compound
+                  ? <TyreCompoundBadge compound={row.compound} />
+                  : <span className="text-[#52525b]">—</span>
+                }
               </td>
 
               <td className="py-3 px-3 text-right font-heading font-bold text-white">
