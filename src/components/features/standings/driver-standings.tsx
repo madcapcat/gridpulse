@@ -2,8 +2,7 @@ import { Trophy } from 'lucide-react'
 import type { DriverStanding } from '@/types/f1.types'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { TeamLogo } from '@/components/ui/team-logo'
-import { getTeamColor, getTeamLogo } from '@/constants/teams'
+import { getTeamColor } from '@/constants/teams'
 import { getNationalityFlag } from '@/utils/flags'
 
 type DriverStandingsProps = {
@@ -25,9 +24,7 @@ export function DriverStandingsTable({ standings }: DriverStandingsProps) {
         </thead>
         <tbody>
           {standings.map((entry, i) => {
-            const constructorId = entry.Constructors[0]?.constructorId ?? ''
-            const teamColor = getTeamColor(constructorId)
-            const hasLogo = !!getTeamLogo(constructorId)
+            const teamColor = getTeamColor(entry.Constructors[0]?.constructorId ?? '')
             const flag = getNationalityFlag(entry.Driver.nationality)
             const isTop3 = i < 3
 
@@ -53,23 +50,20 @@ export function DriverStandingsTable({ standings }: DriverStandingsProps) {
                         {entry.Driver.givenName}{' '}
                         <span className="font-heading font-bold">{entry.Driver.familyName}</span>
                       </span>
-                      {/* Mobile: badge de equipo debajo del nombre */}
                       <div className="sm:hidden mt-0.5">
-                        {hasLogo
-                          ? <TeamLogo constructorId={constructorId} />
-                          : <Badge variant="team" color={teamColor}>{entry.Constructors[0]?.name}</Badge>
-                        }
+                        <Badge variant="team" color={teamColor}>
+                          {entry.Constructors[0]?.name}
+                        </Badge>
                       </div>
                     </div>
                   </div>
                 </td>
 
-                {/* Equipo — logo si existe, badge de texto si no */}
+                {/* Equipo */}
                 <td className="py-3 px-3 hidden sm:table-cell">
-                  {hasLogo
-                    ? <TeamLogo constructorId={constructorId} />
-                    : <Badge variant="team" color={teamColor}>{entry.Constructors[0]?.name}</Badge>
-                  }
+                  <Badge variant="team" color={teamColor}>
+                    {entry.Constructors[0]?.name}
+                  </Badge>
                 </td>
 
                 {/* Victorias */}
